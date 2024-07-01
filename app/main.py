@@ -4,11 +4,6 @@ from sqlalchemy.orm import Session
 from app.store_system import models as store_models
 from app.parking_system import models as parking_models
 from loguru import logger
-
-
-# store_models.Base.metadata.create_all(bind=engine)
-# parking_models.Base.metadata.create_all(bind=engine)
-
 app = FastAPI()
 
 @app.get("/")

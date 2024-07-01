@@ -1,0 +1,1 @@
+from app.core.crud.base import CRUDBase
