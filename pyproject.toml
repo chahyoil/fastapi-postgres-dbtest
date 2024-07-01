@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "dbtest"
+version = "0.1.0"
+description = "fastAPI로 postgreSQL 성능 테스트 하는 프로젝트"
+authors = ["chahyoil <chahyoil@gmail.com>"]
+readme = "README.md"
+packages = [{include = "app"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.78.0"
+sqlalchemy = "^1.4.36"
+databases = "^0.5.5"
+psycopg2-binary = "^2.9.3"
+pydantic = "^1.9.0"
+uvicorn = "^0.18.2"
+prometheus_client = "^0.14.1"
+locust = "^2.8.6"
+pytest = "^6.2.5"
+pytest-asyncio = "^0.17.0"
+httpx = "^0.22.0"
+
+[tool.poetry.dev-dependencies]
+pytest-cov = "^3.0.0"
+black = "^22.3.0"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start-dev = "uvicorn app.main:app --reload"
