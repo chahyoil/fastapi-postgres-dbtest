@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Depends
-from app.core.database import engine, get_db
+from app.core.database import get_db
 from sqlalchemy.orm import Session
-from app.store_system import models as store_models
-from app.parking_system import models as parking_models
 from loguru import logger
+
+from app.store_system import include_routers as include_store_routers
 app = FastAPI()
+
+app.include_router(include_store_routers(), prefix="/store-system")
 
 @app.get("/")
 async def root():
