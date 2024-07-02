@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     API_V1_STR: str
     DEBUG: bool
     DATABASE_URL: str = None
+    ASYNC_DATABASE_URL: str = None
 
     class Config:
         env_file = Path(__file__).resolve().parent.parent.parent / '.env'
@@ -18,5 +19,6 @@ class Settings(BaseSettings):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.DATABASE_URL = f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        self.ASYNC_DATABASE_URL = f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
 settings = Settings()

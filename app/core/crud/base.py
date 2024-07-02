@@ -1,10 +1,15 @@
+from typing import Generic, TypeVar, Type
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from contextlib import contextmanager
 from fastapi.encoders import jsonable_encoder
 
-class CRUDBase:
-    def __init__(self, model):
+ModelType = TypeVar("ModelType")
+CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
+UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
+
+class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
+    def __init__(self, model: Type[ModelType]):
         self.model = model
 
     @contextmanager
@@ -16,7 +21,7 @@ class CRUDBase:
             db.rollback()
             raise e
 
-    def create(self, db: Session, obj_in: BaseModel):
+    def create(self, db: Session, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data)
         with self.auto_commit(db):
@@ -24,10 +29,10 @@ class CRUDBase:
         db.refresh(db_obj)
         return db_obj
 
-    def get(self, db: Session, id: int):
+    def get(self, db: Session, id: int) -> ModelType | None:
         return db.query(self.model).filter(self.model.id == id).first()
 
-    def update(self, db: Session, db_obj, obj_in: BaseModel):
+    def update(self, db: Session, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
         obj_data = jsonable_encoder(db_obj)
         update_data = obj_in.dict(exclude_unset=True)
         for field in obj_data:
@@ -38,8 +43,9 @@ class CRUDBase:
         db.refresh(db_obj)
         return db_obj
 
-    def delete(self, db: Session, id: int):
+    def delete(self, db: Session, id: int) -> ModelType | None:
         obj = db.query(self.model).get(id)
-        with self.auto_commit(db):
-            db.delete(obj)
+        if obj:
+            with self.auto_commit(db):
+                db.delete(obj)
         return obj
