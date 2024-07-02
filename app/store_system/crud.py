@@ -3,7 +3,7 @@ from sqlalchemy import func
 from typing import List, Optional
 from datetime import date
 from app.store_system import models, schemas
-from app import CRUDBase
+from app.core.crud.base import CRUDBase
 
 class CRUDStore(CRUDBase[models.Store, schemas.StoreCreate, schemas.StoreCreate]):
     def get_by_location(self, db: Session, location: str, skip: int = 0, limit: int = 100) -> List[models.Store]:

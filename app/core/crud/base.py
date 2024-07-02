@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar, Type
+from typing import Generic, TypeVar, Type, List
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from contextlib import contextmanager
@@ -31,6 +31,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def get(self, db: Session, id: int) -> ModelType | None:
         return db.query(self.model).filter(self.model.id == id).first()
+
+    def get_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> List[ModelType]:
+        return db.query(self.model).offset(skip).limit(limit).all()
 
     def update(self, db: Session, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
         obj_data = jsonable_encoder(db_obj)
