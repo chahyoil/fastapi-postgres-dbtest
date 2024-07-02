@@ -30,7 +30,7 @@ def delete_store_inspection(inspection_id: int, db: Session = Depends(get_db)):
     db_inspection = crud.store_inspection.get(db=db, id=inspection_id)
     if db_inspection is None:
         raise HTTPException(status_code=404, detail="Store inspection not found")
-    return crud.store_inspection.remove(db=db, id=inspection_id)
+    return crud.store_inspection.delete(db=db, id=inspection_id)
 
 @router.get("/", response_model=List[schemas.StoreInspection])
 def read_store_inspections(

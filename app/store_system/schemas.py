@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from datetime import date
 from typing import List, Optional
 
@@ -58,7 +58,7 @@ class ProductArrival(ProductArrivalBase):
 
 class CustomerBase(BaseModel):
     name: str
-    email: str
+    email: EmailStr  # 여기를 EmailStr로 변경
 
 class CustomerCreate(CustomerBase):
     pass

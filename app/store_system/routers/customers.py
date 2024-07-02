@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from typing import List
 from app.store_system import crud, schemas
 from app.core.database import get_db
@@ -8,7 +9,10 @@ router = APIRouter()
 
 @router.post("/", response_model=schemas.Customer)
 def create_customer(customer: schemas.CustomerCreate, db: Session = Depends(get_db)):
-    return crud.customer.create(db=db, obj_in=customer)
+    try:
+        return crud.customer.create(db=db, obj_in=customer)
+    except IntegrityError:
+        raise HTTPException(status_code=400, detail="Email already registered")
 
 @router.get("/{customer_id}", response_model=schemas.Customer)
 def read_customer(customer_id: int, db: Session = Depends(get_db)):
@@ -29,7 +33,7 @@ def delete_customer(customer_id: int, db: Session = Depends(get_db)):
     db_customer = crud.customer.get(db=db, id=customer_id)
     if db_customer is None:
         raise HTTPException(status_code=404, detail="Customer not found")
-    return crud.customer.remove(db=db, id=customer_id)
+    return crud.customer.delete(db=db, id=customer_id)
 
 @router.get("/", response_model=List[schemas.Customer])
 def read_customers(

@@ -29,7 +29,7 @@ def delete_store(store_id: int, db: Session = Depends(get_db)):
     db_store = crud.store.get(db=db, id=store_id)
     if db_store is None:
         raise HTTPException(status_code=404, detail="Store not found")
-    return crud.store.remove(db=db, id=store_id)
+    return crud.store.delete(db=db, id=store_id)
 
 @router.get("/", response_model=List[schemas.Store])
 def read_stores(

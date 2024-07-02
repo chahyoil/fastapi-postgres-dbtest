@@ -30,7 +30,7 @@ def delete_product_arrival(arrival_id: int, db: Session = Depends(get_db)):
     db_arrival = crud.product_arrival.get(db=db, id=arrival_id)
     if db_arrival is None:
         raise HTTPException(status_code=404, detail="Product arrival not found")
-    return crud.product_arrival.remove(db=db, id=arrival_id)
+    return crud.product_arrival.delete(db=db, id=arrival_id)
 
 @router.get("/", response_model=List[schemas.ProductArrival])
 def read_product_arrivals(

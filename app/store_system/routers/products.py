@@ -29,7 +29,7 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     db_product = crud.product.get(db=db, id=product_id)
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
-    return crud.product.remove(db=db, id=product_id)
+    return crud.product.delete(db=db, id=product_id)
 
 @router.get("/", response_model=List[schemas.Product])
 def read_products(

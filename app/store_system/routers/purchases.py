@@ -30,7 +30,7 @@ def delete_purchase(purchase_id: int, db: Session = Depends(get_db)):
     db_purchase = crud.purchase.get(db=db, id=purchase_id)
     if db_purchase is None:
         raise HTTPException(status_code=404, detail="Purchase not found")
-    return crud.purchase.remove(db=db, id=purchase_id)
+    return crud.purchase.delete(db=db, id=purchase_id)
 
 @router.get("/", response_model=List[schemas.Purchase])
 def read_purchases(
