@@ -9,6 +9,9 @@ services:
       - db
     env_file:
       - .env
+    volumes:
+      - ./app:/dbtest/app
+      - ./pytest.ini:/dbtest/pytest.ini
 
   db:
     image: postgres:13

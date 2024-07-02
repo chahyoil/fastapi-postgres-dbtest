@@ -2,7 +2,7 @@
 FROM python:3.11-slim
 
 # 작업 디렉토리 설정
-WORKDIR /app
+WORKDIR /dbtest
 
 # Poetry 설치
 RUN pip install --no-cache-dir poetry
@@ -10,6 +10,8 @@ RUN pip install --no-cache-dir poetry
 # 프로젝트 파일 복사
 COPY pyproject.toml poetry.lock ./
 COPY app ./app
+COPY pytest.ini ./
+COPY .env ./
 
 # Poetry를 사용하여 의존성 설치
 RUN poetry config virtualenvs.create false \

@@ -19,6 +19,7 @@ locust = "^2.8.6"
 pytest = "^6.2.5"
 pytest-asyncio = "^0.17.0"
 httpx = "^0.22.0"
+python-dotenv = "^0.19.0"
 
 loguru = "^0.7.2"
 asyncpg = "^0.27.0"  # db 비동기
@@ -26,6 +27,9 @@ asyncpg = "^0.27.0"  # db 비동기
 pytest-cov = "^3.0.0"
 black = "^22.3.0"
 isort = "^5.10.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest-ordering = "^0.6"
 
 [build-system]
 requires = ["poetry-core"]
