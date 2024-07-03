@@ -8,11 +8,11 @@
 
 ## 구성요소
 
-- Python 3.12
+- Python 3.11
 - PostgreSQL 13
 - FastAPI 0.78.0
-- SQLAlchemy 1.4.36
-- Grafana 8.2
+- SQLAlchemy 2.0.0+
+- Grafana 8.2.2
 - Prometheus 2.30.3
 - Docker 및 Docker Compose
 
@@ -22,57 +22,105 @@
 
 ## 프로젝트 구성 
 
-* app : 
-    * core 
-    * hospital_system
-    * load_tests
-    * parking_system
-    * store_system
-* grafana
-* logs
-* prometheus
+```
+alembic/  
+app/  
+  core/  
+  hospital_system/  
+  load_tests/  
+  parking_system/  
+  store_system/  
+grafana/  
+  dashboards/  
+  datasources/  
+  provisioning/  
+Prometheus/  
+scripts/
+```
 
 ## 주요 기능 [TODO_LIST]
 
-- FastAPI를 이용한 RESTful API 구현
-- SQLAlchemy를 통한 데이터베이스 ORM
-- Prometheus를 이용한 메트릭 수집
-- Grafana를 통한 데이터 시각화 
-- Locust를 이용한 부하 테스트
-- pytest를 이용한 단위 및 통합 테스트
+- [x] FastAPI를 이용한 RESTful API 구현
+- [x] SQLAlchemy를 통한 데이터베이스 ORM
+- [x] Prometheus를 이용한 메트릭 수집
+- [x] Grafana를 통한 데이터 시각화 
+- [x] Locust를 이용한 부하 테스트
+- [x] pytest를 이용한 단위 및 통합 테스트
+- [x] Alembic을 이용한 데이터베이스 마이그레이션
+- [x] Factory Boy를 활용한 테스트용 Mocking 데이터 생성
+- [ ] 병원 시스템 API 구현
+- [ ] 주차 시스템 API 구현
+- [x] 상점 시스템 API 구현
+- [ ] 각 시스템별 성능 테스트 및 분석
+- [ ] 복잡한 쿼리 최적화
+- [ ] 대량 데이터 처리 성능 테스트
+- [ ] API 문서화 & 주석 (Swagger, ReDoc)
+
 
 ## 설치 및 실행
 
 1. 저장소 클론:
-```
-git clone https://github.com/chahyoil/fastapi-postgres-dbtest
-```
-2. 프로젝트 디렉토리로 이동
-```
-cd fastapi-postgres-dbtest
-```
-3. Poetry를 이용한 의존성 설치:
-```
-poetry install
-```
-4. 환경 변수 설정:
-- .env 파일을 생성하고 필요한 환경 변수를 설정합니다.
+   ```
+   git clone https://github.com/chahyoil/fastapi-postgres-dbtest
+   cd fastapi-postgres-dbtest
+   ```
 
-5. Docker Compose를 이용한 서비스 실행:
-```
-docker-compose up -d
-```
+2. Poetry를 이용한 의존성 설치:
+   ```
+   poetry install
+   ```
+
+3. 환경 변수 설정:
+- `.env` 파일을 생성하고 필요한 환경 변수를 설정합니다. 예:
+  ```
+  DB_USER=user
+  DB_PASSWORD=password
+  DB_NAME=testdb
+  DB_HOST=db
+  DB_PORT=5432
+  ```
+
+4. Docker Compose를 이용한 서비스 실행:
+   ```
+   docker-compose up -d
+   ```
+
+5. 데이터베이스 마이그레이션 (optional : table들이 날아갔을 때만 실행):
+   ```
+   ./scripts/reset_db_and_migrations.sh
+   ```
+
 6. 개발 서버 실행:
-```
-poetry run start-dev
-```
+ ```
+ poetry run start-dev
+ ```
 
 ## API 문서
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
 
 ## 테스트
 
+1. 단위 및 통합 테스트 실행:
+   ```
+   ./scripts/run_tests.sh
+   ```
+
+2. 부하 테스트 실행:
+   ```
+   ./scripts/run_locust.sh
+   ```
+   Locust 웹 인터페이스: http://localhost:8089
+
 ## 모니터링
 
-- Prometheus : http://localhost:9090
-- Grafana : http://localhost:3000
+- Prometheus: http://localhost:9090
+- Grafana: http://localhost:3000 (기본 사용자 이름/비밀번호: admin/admin)
+
+## 데이터베이스 관리
+
+- 데이터베이스 초기화 및 마이그레이션 재설정:
+  ```
+  ./scripts/reset_db_and_migrations.sh
+  ```
 
