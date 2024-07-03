@@ -40,22 +40,21 @@ scripts/
 
 ## 주요 기능 [TODO_LIST]
 
-- [x] FastAPI를 이용한 RESTful API 구현
-- [x] SQLAlchemy를 통한 데이터베이스 ORM
-- [x] Prometheus를 이용한 메트릭 수집
-- [x] Grafana를 통한 데이터 시각화 
-- [x] Locust를 이용한 부하 테스트
-- [x] pytest를 이용한 단위 및 통합 테스트
-- [x] Alembic을 이용한 데이터베이스 마이그레이션
-- [x] Factory Boy를 활용한 테스트용 Mocking 데이터 생성
+- ✅ FastAPI를 이용한 RESTful API 구현
+- ✅ SQLAlchemy를 통한 데이터베이스 ORM
+- ✅ Prometheus를 이용한 메트릭 수집
+- ✅ Grafana를 통한 데이터 시각화 
+- ✅ Locust를 이용한 부하 테스트
+- ✅ pytest를 이용한 단위 및 통합 테스트
+- ✅ Alembic을 이용한 데이터베이스 마이그레이션
+- ✅ Factory Boy를 활용한 테스트용 Mocking 데이터 생성
 - [ ] 병원 시스템 API 구현
 - [ ] 주차 시스템 API 구현
-- [x] 상점 시스템 API 구현
+- ✅ 상점 시스템 API 구현
 - [ ] 각 시스템별 성능 테스트 및 분석
 - [ ] 복잡한 쿼리 최적화
 - [ ] 대량 데이터 처리 성능 테스트
 - [ ] API 문서화 & 주석 (Swagger, ReDoc)
-
 
 ## 설치 및 실행
 
