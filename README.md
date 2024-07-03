@@ -116,6 +116,10 @@ scripts/
 - Prometheus: http://localhost:9090
 - Grafana: http://localhost:3000 (기본 사용자 이름/비밀번호: admin/admin)
 
+### Grafana 샘플 이미지
+- <img src="./imgs/grafana_smaple.png" width="50%" alt="FastAPI Documentation">
+- 대시보드 구성을 대략한거라 수정할 예정...
+
 ## 데이터베이스 관리
 
 - 데이터베이스 초기화 및 마이그레이션 재설정:
