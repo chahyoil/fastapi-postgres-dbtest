@@ -10,6 +10,8 @@ from app.main import app
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from app.store_system.tests.factories import CustomerFactory, ProductFactory, StoreFactory, PurchaseFactory
+from sqlalchemy import inspect, text
+
 
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="cgi")
@@ -52,7 +54,12 @@ async def async_test_client():
 def setup_and_teardown():
     Base.metadata.create_all(bind=engine)
     yield
-    Base.metadata.drop_all(bind=engine)
+    inspector = inspect(engine)
+    table_names = inspector.get_table_names()
+    with engine.begin() as conn:
+        for table in table_names:
+            if table != "alembic_version":
+                conn.execute(text("DROP TABLE IF EXISTS :table CASCADE"), {"table": table})
 
 
 @pytest.fixture
