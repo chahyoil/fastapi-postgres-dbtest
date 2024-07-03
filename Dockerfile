@@ -1,8 +1,11 @@
-# 기본 이미지로 Python 3.12 slim 버전 사용
+# 기본 이미지로 Python 3.11 slim 버전 사용
 FROM python:3.11-slim
 
 # 작업 디렉토리 설정
 WORKDIR /dbtest
+
+# 필요한 패키지 설치
+RUN apt-get update && apt-get install -y netcat-openbsd vim && rm -rf /var/lib/apt/lists/*
 
 # Poetry 설치
 RUN pip install --no-cache-dir poetry
@@ -17,5 +20,9 @@ COPY .env ./
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi
 
-# 애플리케이션 실행
-CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY alembic.ini .
+COPY alembic ./alembic
+COPY scripts/deploy.sh .
+RUN chmod +x deploy.sh
+
+CMD ["./deploy.sh"]
