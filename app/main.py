@@ -13,11 +13,6 @@ app = FastAPI()
 
 app.include_router(include_store_routers(), prefix="/store-system")
 
-# 그라파나 메트릭
-metrics_app = make_asgi_app()
-app.mount("/metrics", metrics_app)
-
-
 @app.get("/")
 async def root():
     logger.info("Root endpoint accessed")
@@ -38,6 +33,10 @@ async def shutdown_event():
 @app.get("/db-check")
 def db_check(db: Session = Depends(get_db)):
     return {"message": "Database connection is successful"}
+
+# 그라파나 메트릭
+metrics_app = make_asgi_app()
+app.mount("/metrics", metrics_app)
 
 @app.middleware("http")
 async def metrics_middleware(request: Request, call_next):
