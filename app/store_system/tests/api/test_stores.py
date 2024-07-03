@@ -1,9 +1,11 @@
 import pytest
+import pytest_asyncio
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from app.main import app
 from app.store_system import crud, schemas
 from app.core.database import get_db, Base, engine
+from app.store_system.tests.factories import StoreFactory
 
 client = TestClient(app)
 
@@ -38,7 +40,8 @@ def test_client(test_db):
 
 @pytest.mark.order(1)
 def test_create_store(test_client):
-    store_data = {"name": "Test Store", "location": "Test Location"}
+    store = StoreFactory.build()
+    store_data = StoreFactory.to_dict(store)
     response = test_client.post("/store-system/stores/", json=store_data)
     assert response.status_code == 200
     data = response.json()
@@ -48,12 +51,11 @@ def test_create_store(test_client):
 
 @pytest.mark.order(2)
 def test_read_store(test_client):
-    # First, create a store
-    store_data = {"name": "Test Store for Reading", "location": "Read Location"}
+    store = StoreFactory.build()
+    store_data = StoreFactory.to_dict(store)
     create_response = test_client.post("/store-system/stores/", json=store_data)
     created_store = create_response.json()
 
-    # Then, read the created store
     response = test_client.get(f"/store-system/stores/{created_store['id']}")
     assert response.status_code == 200
     data = response.json()
@@ -62,13 +64,13 @@ def test_read_store(test_client):
 
 @pytest.mark.order(5)
 def test_update_store(test_client):
-    # First, create a store
-    store_data = {"name": "Test Store for Updating", "location": "Update Location"}
+    store = StoreFactory.build()
+    store_data = StoreFactory.to_dict(store)
     create_response = test_client.post("/store-system/stores/", json=store_data)
     created_store = create_response.json()
 
-    # Then, update the store
-    update_data = {"name": "Updated Store", "location": "New Location"}
+    updated_store = StoreFactory.build()
+    update_data = StoreFactory.to_dict(updated_store)
     response = test_client.put(f"/store-system/stores/{created_store['id']}", json=update_data)
     assert response.status_code == 200
     data = response.json()
@@ -77,42 +79,36 @@ def test_update_store(test_client):
 
 @pytest.mark.order(6)
 def test_delete_store(test_client):
-    # First, create a store
-    store_data = {"name": "Test Store for Deleting", "location": "Delete Location"}
+    store = StoreFactory.build()
+    store_data = StoreFactory.to_dict(store)
     create_response = test_client.post("/store-system/stores/", json=store_data)
     created_store = create_response.json()
 
-    # Then, delete the store
     response = test_client.delete(f"/store-system/stores/{created_store['id']}")
     assert response.status_code == 200
 
-    # Verify that the store has been deleted
     get_response = test_client.get(f"/store-system/stores/{created_store['id']}")
     assert get_response.status_code == 404
 
 @pytest.mark.order(3)
 def test_read_stores(test_client):
-    # Create multiple stores
-    store_data1 = {"name": "Store 1", "location": "Location 1"}
-    store_data2 = {"name": "Store 2", "location": "Location 2"}
-    test_client.post("/store-system/stores/", json=store_data1)
-    test_client.post("/store-system/stores/", json=store_data2)
+    store1 = StoreFactory.build()
+    store2 = StoreFactory.build()
+    test_client.post("/store-system/stores/", json=StoreFactory.to_dict(store1))
+    test_client.post("/store-system/stores/", json=StoreFactory.to_dict(store2))
 
-    # Read all stores
     response = test_client.get("/store-system/stores/")
     assert response.status_code == 200
     data = response.json()
     assert len(data) >= 2
-    assert any(store["name"] == "Store 1" for store in data)
-    assert any(store["name"] == "Store 2" for store in data)
+    assert any(store["name"] == store1.name for store in data)
+    assert any(store["name"] == store2.name for store in data)
 
 @pytest.mark.order(4)
 def test_read_stores_with_filter(test_client):
-    # Create a store with a specific location
-    store_data = {"name": "Filtered Store", "location": "Filter Location"}
-    test_client.post("/store-system/stores/", json=store_data)
+    store = StoreFactory.build(location="Filter Location")
+    test_client.post("/store-system/stores/", json=StoreFactory.to_dict(store))
 
-    # Read stores with location filter
     response = test_client.get("/store-system/stores/?location=Filter Location")
     assert response.status_code == 200
     data = response.json()
@@ -121,16 +117,16 @@ def test_read_stores_with_filter(test_client):
 
 @pytest.mark.order(7)
 def test_read_store_not_found(test_client):
-    response = test_client.get("/store-system/stores/99999")  # Assuming this ID doesn't exist
+    response = test_client.get("/store-system/stores/99999")
     assert response.status_code == 404
 
 @pytest.mark.order(8)
 def test_update_store_not_found(test_client):
-    update_data = {"name": "Updated Store", "location": "New Location"}
-    response = test_client.put("/store-system/stores/99999", json=update_data)  # Assuming this ID doesn't exist
+    update_data = StoreFactory.to_dict(StoreFactory.build())
+    response = test_client.put("/store-system/stores/99999", json=update_data)
     assert response.status_code == 404
 
 @pytest.mark.order(9)
 def test_delete_store_not_found(test_client):
-    response = test_client.delete("/store-system/stores/99999")  # Assuming this ID doesn't exist
+    response = test_client.delete("/store-system/stores/99999")
     assert response.status_code == 404
