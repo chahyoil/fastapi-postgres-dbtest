@@ -11,6 +11,9 @@ from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from app.store_system.tests.factories import CustomerFactory, ProductFactory, StoreFactory, PurchaseFactory
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="cgi")
+
 # 동기 엔진 설정
 engine = create_engine(settings.DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

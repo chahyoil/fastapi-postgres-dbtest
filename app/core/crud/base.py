@@ -49,7 +49,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db_obj
 
     def delete(self, db: Session, id: int) -> ModelType | None:
-        obj = db.query(self.model).get(id)
+        obj = db.get(self.model, id)
         if obj:
             with self.auto_commit(db):
                 db.delete(obj)

@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy import text
 from .config import settings
 from loguru import logger
 
@@ -34,7 +35,7 @@ def get_db():
     db = SessionLocal()
     try:
         # 데이터베이스 연결 테스트
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         logger.info("Synchronous database connection successful")
         yield db
     except Exception as e:
@@ -49,7 +50,7 @@ async def get_async_db():
     async with AsyncSessionLocal() as session:
         try:
             # 데이터베이스 연결 테스트
-            await session.execute("SELECT 1")
+            await session.execute(text("SELECT 1"))
             logger.info("Asynchronous database connection successful")
             yield session
         except Exception as e:
